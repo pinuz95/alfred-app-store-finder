@@ -35,23 +35,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>autopaste</key>
-				<true/>
-				<key>clipboardtext</key>
-				<string>{query}</string>
-				<key>transient</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.clipboard</string>
-			<key>uid</key>
-			<string>E530FC74-12B1-4385-A3B3-40695ADEA78F</string>
-			<key>version</key>
-			<integer>3</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>alfredfiltersresultsmatchmode</key>
@@ -98,13 +81,32 @@
 			<key>version</key>
 			<integer>3</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<true/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>E530FC74-12B1-4385-A3B3-40695ADEA78F</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
 	</array>
 	<key>readme</key>
-	<string>retrieve the Adam ID of an app:
-app &lt;app_name&gt;
+	<string>Find the app ID of an app:
+app &lt;app name&gt; [&lt;storefront&gt;]
 
-retrieve the name of an app from the Adam ID:
-app &lt;app_id&gt;</string>
+Find the name of an app from the app ID:
+app &lt;app id&gt;</string>
 	<key>uidata</key>
 	<dict>
 		<key>1A0C5DF0-F5D3-4A60-88FC-78C373476D47</key>
@@ -125,8 +127,8 @@ app &lt;app_id&gt;</string>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>
-	<string>0.0.1</string>
+	<string>1.0.0</string>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/pinuz95/alfred-app-store-finder</string>
 </dict>
 </plist>
