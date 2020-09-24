@@ -3,6 +3,10 @@ App Store Finder for [Alfred](http://www.alfredapp.com)
 
 Find any app in the App Store and paste its app ID.
 
+## Usage
+
+Use the command `app` to find an app. You can select (click or press enter) an app to copy-paste its app ID.
+
 ### Commands
 * `app <app name> [<storefront>]`
 * `app <app ID>`
