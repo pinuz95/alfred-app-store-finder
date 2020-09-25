@@ -178,7 +178,7 @@ def main(wf):
             add_item_app(wf, app)
     else:
         args = query.split(" ")
-        if args[-1].lower() in storefront_list:
+        if len(args) > 1 and args[-1].lower() in storefront_list:
             storefront = args[-1]
             token = " ".join(args[:-1])
         else:
@@ -199,7 +199,7 @@ if __name__ == "__main__":
     wf = Workflow3(
         update_settings={
             'github_slug': 'pinuz95/alfred-app-store-finder',
-            'frequency': 0
+            'frequency': 1
         }
     )
 
