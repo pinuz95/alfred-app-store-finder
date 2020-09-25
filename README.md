@@ -21,6 +21,6 @@ Use the command `app` to find an app. You can select (click or press enter) an a
 
 You can specify a storefront to find the app name in that specific storefront. Please notice that the apps are _not_ ordered according to the App Store search results.
 
-**[Last release](https://github.com/pinuz95/alfred-app-store-finder/releases)**
+**[Latest release](https://github.com/pinuz95/alfred-app-store-finder/releases)**
 
 ![Workflow Screenshot](screenshot.png)
