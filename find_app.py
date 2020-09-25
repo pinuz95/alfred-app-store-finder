@@ -127,10 +127,12 @@ def find_app_from_id(app_id):
     )
 
     if response.status_code == 200:
+        data = response.json()["data"][0]["attributes"]
         return {
-            "app_name": response.json()["data"][0]["attributes"]["name"],
-            "developer_name": response.json()["data"][0]["attributes"]["artistName"],
+            "app_name": data["name"],
+            "developer_name": data["artistName"],
             "app_id": app_id,
+            "bundle_id": data["platformAttributes"]["ios"]["bundleId"],
         }
     else:
         return None
@@ -147,37 +149,44 @@ def find_apps_from_token(token, storefront="us"):
                 "app_name": item["trackName"],
                 "developer_name": item["sellerName"],
                 "app_id": item["trackId"],
+                "bundle_id": item["bundleId"],
             }
             for item in response.json()["results"]
         ]
     else:
-        return []
+        return None
 
 
-def add_item_app(wf, app):
-    wf.add_item(app["app_name"], app["developer_name"], valid=True, arg=app["app_id"])
+def add_item_app(wf, app, info="app_id"):
+    wf.add_item(app["app_name"], app["developer_name"], valid=True, arg=app[info])
 
 
 def main(wf):
     query = wf.args[0]
+    args = query.split(" ")
+
+    if len(args) > 1 and args[0] in ["id", "bundle"]:
+        info = {"id": "app_id", "bundle": "bundle_id"}[args[0]]
+        args = args[1:]
+    else:
+        info = "app_id"
 
     is_app_id = False
-    if len(query) in (9, 10):
+    if len(args) == 1 and len(args[0]) in (9, 10):
         try:
-            int(query)
+            int(args[0])
             is_app_id = True
         except:
             pass
 
     if is_app_id:
-        app = find_app_from_id(query)
+        app = find_app_from_id(args[0])
 
         if app is None:
             wf.add_item("No results", "No app found for ID " + query)
         else:
-            add_item_app(wf, app)
+            add_item_app(wf, app, info=info)
     else:
-        args = query.split(" ")
         if len(args) > 1 and args[-1].lower() in storefront_list:
             storefront = args[-1]
             token = " ".join(args[:-1])
@@ -186,11 +195,11 @@ def main(wf):
             token = " ".join(args)
 
         apps_list = find_apps_from_token(token, storefront)
-        if len(apps_list) == 0:
+        if apps_list is None:
             wf.add_item("No results", "No app found for token " + token)
         else:
             for app in apps_list:
-                add_item_app(wf, app)
+                add_item_app(wf, app, info=info)
 
     wf.send_feedback()
 
