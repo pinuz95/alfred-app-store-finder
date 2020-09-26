@@ -12,7 +12,7 @@ Use the command `app bundle` to copy-paste the bundle ID of an app.
 * `app [bundle|id] <app name>|<app ID> [<storefront>]`
 
 ### Examples
-* `command` -> `pasted string`\
+* `command` -> `pasted string`
 * `app pic jointer` -> `509987785`
 * `app id pic jointer` -> `509987785`
 * `app bundle pic jointer` -> `com.lileping.photoframepro`
