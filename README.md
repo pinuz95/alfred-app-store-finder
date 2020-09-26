@@ -1,20 +1,18 @@
 App Store Finder for [Alfred](http://www.alfredapp.com)
-==============================
+=============================
 
 Find any app in the App Store and paste its app ID.
 
 ## Usage
 
-Use the command `app` to find an app. You can select (click or press enter) an app to copy-paste its app ID.
-Use the command `app bundle` to copy-paste the bundle ID of an app. You can also use `app id`, that is equivalent to `app`.
+Use the command `app` or `app id` to find an app and copy-paste its ID.\
+Use the command `app bundle` to copy-paste the bundle ID of an app.
 
 ### Commands
-* `app [bundle/id] <app name> [<storefront>]`
-* `app [bundle/id] <app ID>`
+* `app [bundle|id] <app name>|<app ID> [<storefront>]`
 
 ### Examples
-* `command` -> `pasted string`
-
+* `command` -> `pasted string`\
 * `app pic jointer` -> `509987785`
 * `app id pic jointer` -> `509987785`
 * `app bundle pic jointer` -> `com.lileping.photoframepro`
