@@ -99,49 +99,10 @@ storefront_list = [
 ]
 
 
-def find_app_from_id(app_id):
-    headers = {
-        "authorization": "Bearer eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IkNSRjVITkJHUFEifQ.eyJpc3MiOiI4Q1UyNk1LTFM0IiwiaWF0IjoxNjAwMzkxOTgyLCJleHAiOjE2MDM0MTU5ODJ9.L7n44RSJSFL60iVnOn6PkrCbpZG8kKTvQ_buZ7plIcSZQwTHYZdJSTiRzN8F9vEINC61aD1ahAs8dKzZtbwD9A",
-    }
-
-    params = dict(
-        [
-            ("platform", "web"),
-            ("additionalPlatforms", "appletv,ipad,iphone,mac"),
-            (
-                "extend",
-                "description,developerInfo,editorialVideo,eula,fileSizeByDevice,messagesScreenshots,privacyPolicyUrl,privacyPolicyText,promotionalText,screenshotsByType,supportURLForLanguage,versionHistory,videoPreviewsByType,websiteUrl",
-            ),
-            (
-                "include",
-                "genres,developer,reviews,merchandised-in-apps,customers-also-bought-apps,developer-other-apps,app-bundles,top-in-apps,eula",
-            ),
-            ("l", "en-gb"),
-        ]
-    )
-
-    response = web.get(
-        "https://amp-api.apps.apple.com/v1/catalog/SA/apps/" + str(app_id),
-        headers=headers,
-        params=params,
-    )
-
-    if response.status_code == 200:
-        data = response.json()["data"][0]["attributes"]
-        return {
-            "app_name": data["name"],
-            "developer_name": data["artistName"],
-            "app_id": app_id,
-            "bundle_id": data["platformAttributes"]["ios"]["bundleId"],
-        }
-    else:
-        return None
-
-
-def find_apps_from_token(token, storefront="us"):
+def find_apps(query, storefront="us"):
     response = web.get(
         "http://itunes.apple.com/search?",
-        params={"term": token, "entity": "software", "country": storefront, "limit": 9},
+        params={"term": query, "entity": "software", "country": storefront, "limit": 9},
     )
     if response.status_code == 200:
         return [
@@ -154,7 +115,7 @@ def find_apps_from_token(token, storefront="us"):
             for item in response.json()["results"]
         ]
     else:
-        return None
+        return []
 
 
 def add_item_app(wf, app, info="app_id"):
@@ -166,40 +127,22 @@ def main(wf):
     args = query.split(" ")
 
     if len(args) > 1 and args[0] in ["id", "bundle"]:
-        info = {"id": "app_id", "bundle": "bundle_id"}[args[0]]
-        args = args[1:]
+        info = {"id": "app_id", "bundle": "bundle_id"}[args.pop(0)]
     else:
         info = "app_id"
 
-    is_app_id = False
-    if len(args) == 1 and len(args[0]) in (9, 10):
-        try:
-            int(args[0])
-            is_app_id = True
-        except:
-            pass
-
-    if is_app_id:
-        app = find_app_from_id(args[0])
-
-        if app is None:
-            wf.add_item("No results", "No app found for ID " + query)
-        else:
-            add_item_app(wf, app, info=info)
+    if len(args) > 1 and args[-1].lower() in storefront_list:
+        storefront = args.pop(-1).lower()
     else:
-        if len(args) > 1 and args[-1].lower() in storefront_list:
-            storefront = args[-1]
-            token = " ".join(args[:-1])
-        else:
-            storefront = "us"
-            token = " ".join(args)
+        storefront = "us"
+    query = " ".join(args)
 
-        apps_list = find_apps_from_token(token, storefront)
-        if apps_list is None:
-            wf.add_item("No results", "No app found for token " + token)
-        else:
-            for app in apps_list:
-                add_item_app(wf, app, info=info)
+    apps_list = find_apps(query, storefront)
+    if not apps_list:
+        wf.add_item("No results", "No apps found for " + query)
+    else:
+        for app in apps_list:
+            add_item_app(wf, app, info=info)
 
     wf.send_feedback()
 
